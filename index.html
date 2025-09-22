@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alignment Node Delegator - 0G Network</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Alignment Node Delegator</h1>
+            <p class="subtitle">Manage your NFT delegations on 0G-Galileo-Testnet</p>
+            <div class="wallet-info">
+                <button id="connectWallet" class="btn btn-primary">Connect Wallet</button>
+                <div id="walletAddress" class="wallet-address"></div>
+            </div>
+        </header>
+
+        <main>
+            <div class="card" id="approvalCard" style="display: none;">
+                <h2>NFT Approval Required</h2>
+                <p class="approval-message">To delegate or undelegate NFTs, you need to approve the Manager contract to manage your NFTs.</p>
+                <button id="approveBtn" class="btn btn-primary">
+                    Approve All NFTs
+                </button>
+            </div>
+
+            <div class="card">
+                <h2>Delegate/Undelegate NFTs</h2>
+                
+                <div class="form-group">
+                    <label for="operatorAddress">Operator Address</label>
+                    <input 
+                        type="text" 
+                        id="operatorAddress" 
+                        placeholder="0x..." 
+                        class="input-field"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="tokenIds">Token IDs (comma-separated)</label>
+                    <input 
+                        type="text" 
+                        id="tokenIds" 
+                        placeholder="1, 2, 3, 4" 
+                        class="input-field"
+                    />
+                    <small class="help-text">Enter token IDs separated by commas</small>
+                </div>
+
+                <div class="button-group">
+                    <button id="delegateBtn" class="btn btn-success" disabled>
+                        Delegate NFTs
+                    </button>
+                    <button id="undelegateBtn" class="btn btn-danger" disabled>
+                        Undelegate NFTs
+                    </button>
+                    <button id="checkDelegationBtn" class="btn btn-primary" disabled>
+                        Check Delegation
+                    </button>
+                </div>
+            </div>
+
+            <div class="card" id="delegationInfo" style="display: none;">
+                <h3>Delegation Status</h3>
+                <div id="delegationStatus" class="delegation-status"></div>
+            </div>
+
+            <div class="card" id="transactionStatus" style="display: none;">
+                <h3>Transaction Status</h3>
+                <div id="statusMessage" class="status-message"></div>
+                <div id="txHash" class="tx-hash"></div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Connected to 0G-Galileo-Testnet (Chain ID: 16601)</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
