@@ -127,12 +127,14 @@ let userAccount;
 // Initialize the app
 window.addEventListener('load', async () => {
     const connectBtn = document.getElementById('connectWallet');
+    const addNetworkBtn = document.getElementById('addNetworkBtn');
     const delegateBtn = document.getElementById('delegateBtn');
     const undelegateBtn = document.getElementById('undelegateBtn');
     const checkDelegationBtn = document.getElementById('checkDelegationBtn');
     const approveBtn = document.getElementById('approveBtn');
 
     connectBtn.addEventListener('click', handleWalletButton);
+    addNetworkBtn.addEventListener('click', addNetworkToMetaMask);
     delegateBtn.addEventListener('click', delegateNFTs);
     undelegateBtn.addEventListener('click', undelegateNFTs);
     checkDelegationBtn.addEventListener('click', checkDelegation);
@@ -245,7 +247,7 @@ async function switchNetwork() {
                         chainName: '0G Network',
                         nativeCurrency: {
                             name: '0G',
-                            symbol: 'A0GI',
+                            symbol: '0G',
                             decimals: 18,
                         },
                         rpcUrls: [RPC_URL],
@@ -257,6 +259,39 @@ async function switchNetwork() {
             }
         } else {
             throw switchError;
+        }
+    }
+}
+
+// Function to manually add 0G network to MetaMask
+async function addNetworkToMetaMask() {
+    if (typeof window.ethereum === 'undefined') {
+        alert('Please install MetaMask or another Ethereum wallet.');
+        return;
+    }
+
+    try {
+        await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [{
+                chainId: '0x4115', // 16661
+                chainName: '0G Network',
+                nativeCurrency: {
+                    name: '0G',
+                    symbol: '0G',
+                    decimals: 18,
+                },
+                rpcUrls: [RPC_URL],
+                blockExplorerUrls: ['https://chainscan.0g.ai'],
+            }],
+        });
+        showStatus('0G Network added to MetaMask successfully!', 'success');
+    } catch (error) {
+        console.error('Error adding network:', error);
+        if (error.code === 4001) {
+            showStatus('Network addition rejected by user', 'error');
+        } else {
+            showStatus('Failed to add network: ' + error.message, 'error');
         }
     }
 }
