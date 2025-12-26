@@ -229,9 +229,10 @@ async function connectWallet() {
 
 async function switchNetwork() {
     try {
+        // Try to switch to 0G network (16661 = 0x4115 in hex)
         await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0xA4B1' }], // 16601 in hex
+            params: [{ chainId: '0x4115' }], // 16661 in hex
         });
     } catch (switchError) {
         // This error code indicates that the chain has not been added to MetaMask
@@ -240,19 +241,19 @@ async function switchNetwork() {
                 await window.ethereum.request({
                     method: 'wallet_addEthereumChain',
                     params: [{
-                        chainId: '0xA4B1', // 42161
-                        chainName: 'Arbitrum One',
+                        chainId: '0x4115', // 16661
+                        chainName: '0G Network',
                         nativeCurrency: {
-                            name: 'Ethereum',
-                            symbol: 'ETH',
+                            name: '0G',
+                            symbol: 'A0GI',
                             decimals: 18,
                         },
                         rpcUrls: [RPC_URL],
-                        blockExplorerUrls: ['https://arbiscan.io'],
+                        blockExplorerUrls: ['https://scan.0g.ai'],
                     }],
                 });
             } catch (addError) {
-                throw new Error('Failed to add Arbitrum network to MetaMask');
+                throw new Error('Failed to add 0G network to MetaMask');
             }
         } else {
             throw switchError;
