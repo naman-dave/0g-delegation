@@ -266,7 +266,7 @@ async function switchNetwork() {
 // Function to manually add 0G network to MetaMask
 async function addNetworkToMetaMask() {
     if (typeof window.ethereum === 'undefined') {
-        alert('Please install MetaMask or another Ethereum wallet.');
+        showToast('Wallet Not Found', 'Please install MetaMask or another Ethereum wallet.', 'error');
         return;
     }
 
@@ -285,13 +285,13 @@ async function addNetworkToMetaMask() {
                 blockExplorerUrls: ['https://chainscan.0g.ai'],
             }],
         });
-        showStatus('0G Network added to MetaMask successfully!', 'success');
+        showToast('Network Added!', '0G Network has been successfully added to your wallet.', 'success');
     } catch (error) {
         console.error('Error adding network:', error);
         if (error.code === 4001) {
-            showStatus('Network addition rejected by user', 'error');
+            showToast('Request Rejected', 'You rejected the network addition request.', 'error');
         } else {
-            showStatus('Failed to add network: ' + error.message, 'error');
+            showToast('Error', 'Failed to add network: ' + error.message, 'error');
         }
     }
 }
@@ -376,6 +376,7 @@ async function delegateNFTs() {
 
         showStatus('NFTs delegated successfully!', 'success');
         showTransactionHash(tx.transactionHash);
+        showToast('Delegation Successful!', `Successfully delegated ${tokenIds.length} NFT(s)`, 'success');
 
     } catch (error) {
         console.error('Error delegating NFTs:', error);
@@ -421,6 +422,7 @@ async function undelegateNFTs() {
 
         showStatus('NFTs undelegated successfully!', 'success');
         showTransactionHash(tx.transactionHash);
+        showToast('Undelegate Successful!', `Successfully undelegated ${tokenIds.length} NFT(s)`, 'success');
 
     } catch (error) {
         console.error('Error undelegating NFTs:', error);
@@ -545,6 +547,7 @@ async function approveAll() {
 
         showStatus('NFTs approved successfully!', 'success');
         showTransactionHash(tx.transactionHash);
+        showToast('Approval Successful!', 'Your NFTs can now be delegated/undelegated', 'success');
 
         // Check approval status again
         await checkApprovalStatus();
@@ -553,4 +556,38 @@ async function approveAll() {
         console.error('Error approving NFTs:', error);
         showStatus('Failed to approve NFTs: ' + error.message, 'error');
     }
+}
+
+// Toast Notification System
+function showToast(title, message, type = 'success', duration = 4000) {
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    // Set icon based on type
+    let icon = '✓';
+    if (type === 'error') icon = '✕';
+    if (type === 'info') icon = 'ℹ';
+    
+    toast.innerHTML = `
+        <div class="toast-icon">${icon}</div>
+        <div class="toast-content">
+            <div class="toast-title">${title}</div>
+            <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+    `;
+    
+    // Add to body
+    document.body.appendChild(toast);
+    
+    // Auto remove after duration
+    setTimeout(() => {
+        toast.classList.add('hiding');
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.remove();
+            }
+        }, 300); // Match animation duration
+    }, duration);
 }
